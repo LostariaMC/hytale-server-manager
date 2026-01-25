@@ -1,5 +1,6 @@
-package fr.erpriex.hytaleservermanager.entities;
+package fr.lostaria.hytaleservermanager.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -15,5 +16,8 @@ public class Node {
 
     @Id
     private String id;
+
+    @Column(nullable = false, unique = true)
+    public String publicIp;
 
 }
