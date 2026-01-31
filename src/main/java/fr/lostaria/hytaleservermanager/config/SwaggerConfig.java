@@ -13,16 +13,17 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        final String securitySchemeName = "basicAuth";
+        final String bearer = "bearerAuth";
 
         return new OpenAPI()
                 .info(new Info().title("HytaleServerManager API Documentation").version("1.0"))
-                .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
+                .addSecurityItem(new SecurityRequirement().addList(bearer))
                 .components(new Components()
-                        .addSecuritySchemes(securitySchemeName,
+                        .addSecuritySchemes(bearer,
                                 new SecurityScheme()
-                                        .name(securitySchemeName)
+                                        .name(bearer)
                                         .type(SecurityScheme.Type.HTTP)
-                                        .scheme("basic")));
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")));
     }
 }
