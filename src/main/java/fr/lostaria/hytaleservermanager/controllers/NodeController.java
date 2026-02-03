@@ -3,7 +3,6 @@ package fr.lostaria.hytaleservermanager.controllers;
 import fr.lostaria.hytaleservermanager.entities.Node;
 import fr.lostaria.hytaleservermanager.mappers.NodeMapper;
 import fr.lostaria.hytaleservermanager.models.RegisterNodeModel;
-import fr.lostaria.hytaleservermanager.payload.ErrorResponse;
 import fr.lostaria.hytaleservermanager.repositories.NodeRepository;
 import fr.lostaria.hytaleservermanager.services.NodeService;
 import jakarta.validation.Valid;
@@ -29,12 +28,9 @@ public class NodeController {
     public ResponseEntity registerNode(@Valid @RequestBody RegisterNodeModel registerNodeModel) {
         String publicIp = registerNodeModel.getPublicIp();
 
-        if (nodeRepository.existsByPublicIp(publicIp)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ErrorResponse(HttpStatus.CONFLICT, "Node with public IP '" + publicIp + "' already exists."));
-        }
+        Node node = nodeRepository.findByPublicIp(publicIp)
+                .orElseGet(() -> nodeService.createNode(registerNodeModel));
 
-        Node node = nodeService.createNode(registerNodeModel);
         return ResponseEntity.status(HttpStatus.CREATED).body(nodeMapper.toModel(node));
     }
 
