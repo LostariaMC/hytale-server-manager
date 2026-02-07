@@ -11,6 +11,8 @@ public class NodeMapper {
         NodeModel dto = new NodeModel();
         dto.setId(node.getId());
         dto.setIp(node.getIp());
+        dto.setPortRangeStart(node.getPortRangeStart());
+        dto.setPortRangeEnd(node.getPortRangeEnd());
         return dto;
     }
 
