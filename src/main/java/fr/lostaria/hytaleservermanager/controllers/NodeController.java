@@ -26,9 +26,9 @@ public class NodeController {
 
     @PostMapping
     public ResponseEntity registerNode(@Valid @RequestBody RegisterNodeModel registerNodeModel) {
-        String publicIp = registerNodeModel.getPublicIp();
+        String publicIp = registerNodeModel.getIp();
 
-        Node node = nodeRepository.findByPublicIp(publicIp)
+        Node node = nodeRepository.findByIp(publicIp)
                 .orElseGet(() -> nodeService.createNode(registerNodeModel));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(nodeMapper.toModel(node));

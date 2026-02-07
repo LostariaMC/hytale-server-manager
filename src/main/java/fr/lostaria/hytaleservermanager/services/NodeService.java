@@ -17,7 +17,7 @@ public class NodeService {
     public Node createNode(RegisterNodeModel registerNodeModel) {
         Node node = new Node();
         node.setId(UUID.randomUUID().toString());
-        node.setPublicIp(registerNodeModel.getPublicIp());
+        node.setIp(registerNodeModel.getIp());
         return nodeRepository.save(node);
     }
 

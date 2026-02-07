@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RegisterNodeModel {
+public class CreateServerModel {
 
-    private String ip;
+    private String template;
 
 }

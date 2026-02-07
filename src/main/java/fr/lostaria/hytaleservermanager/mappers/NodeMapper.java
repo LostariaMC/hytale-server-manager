@@ -10,7 +10,7 @@ public class NodeMapper {
     public NodeModel toModel(Node node) {
         NodeModel dto = new NodeModel();
         dto.setId(node.getId());
-        dto.setPublicIp(node.getPublicIp());
+        dto.setIp(node.getIp());
         return dto;
     }
 

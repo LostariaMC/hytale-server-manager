@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface NodeRepository extends JpaRepository<Node, String> {
-    Optional<Node> findByPublicIp(String publicIp);
+    Optional<Node> findByIp(String ip);
 }

@@ -8,6 +8,6 @@ import lombok.Setter;
 public class NodeModel {
 
     private String id;
-    private String publicIp;
+    private String ip;
 
 }
