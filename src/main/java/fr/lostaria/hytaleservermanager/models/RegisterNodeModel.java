@@ -8,5 +8,7 @@ import lombok.Setter;
 public class RegisterNodeModel {
 
     private String ip;
+    private int portRangeStart;
+    private int portRangeEnd;
 
 }

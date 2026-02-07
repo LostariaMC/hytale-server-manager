@@ -3,6 +3,7 @@ package fr.lostaria.hytaleservermanager.controllers;
 import fr.lostaria.hytaleservermanager.entities.Node;
 import fr.lostaria.hytaleservermanager.mappers.NodeMapper;
 import fr.lostaria.hytaleservermanager.models.RegisterNodeModel;
+import fr.lostaria.hytaleservermanager.payload.ErrorResponse;
 import fr.lostaria.hytaleservermanager.repositories.NodeRepository;
 import fr.lostaria.hytaleservermanager.services.NodeService;
 import jakarta.validation.Valid;
@@ -26,9 +27,17 @@ public class NodeController {
 
     @PostMapping
     public ResponseEntity registerNode(@Valid @RequestBody RegisterNodeModel registerNodeModel) {
-        String publicIp = registerNodeModel.getIp();
+        if(registerNodeModel.getPortRangeStart() > registerNodeModel.getPortRangeEnd()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(
+                            HttpStatus.BAD_REQUEST,
+                            "Port range start must be less than port range end"
+                    ));
+        }
 
-        Node node = nodeRepository.findByIp(publicIp)
+        String ip = registerNodeModel.getIp();
+        Node node = nodeRepository.findByIp(ip)
                 .orElseGet(() -> nodeService.createNode(registerNodeModel));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(nodeMapper.toModel(node));

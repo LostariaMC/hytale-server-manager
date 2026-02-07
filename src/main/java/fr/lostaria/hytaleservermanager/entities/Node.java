@@ -18,7 +18,16 @@ public class Node {
     private String id;
 
     @Column(nullable = false, unique = true)
-    public String ip;
+    private String ip;
+
+    @Column(nullable = false)
+    private int portRangeStart;
+
+    @Column(nullable = false)
+    private int portRangeEnd;
+
+    @Column(nullable = false)
+    private int nextPort;
 
     @OneToMany(mappedBy = "node", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default

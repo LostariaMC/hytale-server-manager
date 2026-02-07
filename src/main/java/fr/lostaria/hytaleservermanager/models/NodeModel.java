@@ -9,5 +9,7 @@ public class NodeModel {
 
     private String id;
     private String ip;
+    private int portRangeStart;
+    private int portRangeEnd;
 
 }
