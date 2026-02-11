@@ -1,23 +1,39 @@
 package fr.lostaria.hytaleservermanager.services;
 
 import fr.lostaria.hytaleservermanager.entities.Node;
+import fr.lostaria.hytaleservermanager.pubsub.PubsubClient;
 import fr.lostaria.hytaleservermanager.repositories.NodeRepository;
 import org.springframework.stereotype.Service;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class ServerService {
 
     private final NodeRepository nodeRepository;
-    private final MessageService messageService;
+    private final PubsubClient pubsubClient;
+    private final ObjectMapper objectMapper;
 
-    public ServerService(NodeRepository nodeRepository, MessageService messageService) {
+    public ServerService(
+            NodeRepository nodeRepository,
+            PubsubClient pubsubClient,
+            ObjectMapper objectMapper
+    ) {
         this.nodeRepository = nodeRepository;
-        this.messageService = messageService;
+        this.pubsubClient = pubsubClient;
+        this.objectMapper = objectMapper;
     }
 
-    public void startServer() {
+    public void createServer() {
         Node node = nodeRepository.findAll().get(0);
-        messageService.send(node.getId(), "Hello world !");
-    }
 
+        JsonNode payload =
+                objectMapper.getNodeFactory().textNode("Hello world");
+
+        pubsubClient.send(
+                "node-" + node.getId().toString(),
+                "HELLO_WORLD",
+                payload
+        );
+    }
 }

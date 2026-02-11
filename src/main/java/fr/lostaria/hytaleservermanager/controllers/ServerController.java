@@ -20,7 +20,7 @@ public class ServerController {
 
     @PostMapping
     public ResponseEntity createServer(@RequestBody CreateServerModel createServerModel) {
-        serverService.startServer();
+        serverService.createServer();
         return ResponseEntity.ok().build();
     }
 
