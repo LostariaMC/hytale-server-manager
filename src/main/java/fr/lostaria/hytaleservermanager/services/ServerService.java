@@ -2,37 +2,40 @@ package fr.lostaria.hytaleservermanager.services;
 
 import fr.lostaria.hytaleservermanager.entities.Node;
 import fr.lostaria.hytaleservermanager.pubsub.PubsubClient;
-import fr.lostaria.hytaleservermanager.repositories.NodeRepository;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 
 @Service
 public class ServerService {
 
-    private final NodeRepository nodeRepository;
+    private final NodeService nodeService;
     private final PubsubClient pubsubClient;
     private final ObjectMapper objectMapper;
 
     public ServerService(
-            NodeRepository nodeRepository,
+            NodeService nodeService,
             PubsubClient pubsubClient,
             ObjectMapper objectMapper
     ) {
-        this.nodeRepository = nodeRepository;
+        this.nodeService = nodeService;
         this.pubsubClient = pubsubClient;
         this.objectMapper = objectMapper;
     }
 
-    public void createServer() {
-        Node node = nodeRepository.findAll().get(0);
+    public void createServer(String image) {
+        Node node = nodeService.getLeastLoadedNode();
+        if (node == null) {
+            throw new IllegalStateException("No available node");
+        }
 
-        JsonNode payload =
-                objectMapper.getNodeFactory().textNode("Hello world");
+        ObjectNode payload = objectMapper.createObjectNode();
+        payload.put("image", image);
 
         pubsubClient.send(
                 "node-" + node.getId().toString(),
-                "HELLO_WORLD",
+                "CREATE_SERVER",
                 payload
         );
     }

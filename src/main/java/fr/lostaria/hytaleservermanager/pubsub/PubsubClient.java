@@ -39,6 +39,7 @@ public class PubsubClient {
 
             ObjectNode envelope = objectMapper.createObjectNode();
             envelope.put("type", type);
+            envelope.put("producer", "server-manager");
             envelope.set("payload", payload);
 
             String body = objectMapper.writeValueAsString(envelope);

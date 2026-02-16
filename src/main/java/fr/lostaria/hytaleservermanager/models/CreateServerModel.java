@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class CreateServerModel {
 
-    private String template;
+    private String image;
 
 }

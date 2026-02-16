@@ -2,6 +2,7 @@ package fr.lostaria.hytaleservermanager.controllers;
 
 import fr.lostaria.hytaleservermanager.models.CreateServerModel;
 import fr.lostaria.hytaleservermanager.services.ServerService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +20,8 @@ public class ServerController {
     }
 
     @PostMapping
-    public ResponseEntity createServer(@RequestBody CreateServerModel createServerModel) {
-        serverService.createServer();
+    public ResponseEntity createServer(@Valid @RequestBody CreateServerModel createServerModel) {
+        serverService.createServer(createServerModel.getImage());
         return ResponseEntity.ok().build();
     }
 

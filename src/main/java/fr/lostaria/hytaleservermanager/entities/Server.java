@@ -20,4 +20,10 @@ public class Server {
     @EqualsAndHashCode.Exclude
     private Node node;
 
+    @Column(nullable = false)
+    private int port;
+
+    @Column(nullable = false)
+    private String image;
+
 }
