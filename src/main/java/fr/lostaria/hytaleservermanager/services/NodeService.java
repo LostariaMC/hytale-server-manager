@@ -16,12 +16,14 @@ public class NodeService {
     private NodeRepository nodeRepository;
 
     public Node createNode(RegisterNodeModel registerNodeModel) {
-        Node node = new Node();
-        node.setId(UUID.randomUUID().toString());
-        node.setIp(registerNodeModel.getIp());
-        node.setPortRangeStart(registerNodeModel.getPortRangeStart());
-        node.setPortRangeEnd(registerNodeModel.getPortRangeEnd());
-        node.setNextPort(registerNodeModel.getPortRangeStart());
+        Node node = Node.builder()
+                .id(UUID.randomUUID().toString())
+                .ip(registerNodeModel.getIp())
+                .portRangeStart(registerNodeModel.getPortRangeStart())
+                .portRangeEnd(registerNodeModel.getPortRangeEnd())
+                .nextPort(registerNodeModel.getPortRangeStart())
+                .build();
+
         return nodeRepository.save(node);
     }
 
