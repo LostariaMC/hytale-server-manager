@@ -95,9 +95,14 @@ public class ServerService {
         payload.put("port", port);
         payload.put("serverId", serverId);
 
-        payload.put("sessionToken", gs.sessionToken());
-        payload.put("identityToken", gs.identityToken());
-        if (gs.expiresAt() != null) payload.put("expiresAt", gs.expiresAt());
+        ObjectNode authNode = objectMapper.createObjectNode();
+        authNode.put("sessionToken", gs.sessionToken());
+        authNode.put("identityToken", gs.identityToken());
+        if (gs.expiresAt() != null) {
+            authNode.put("expiresAt", gs.expiresAt());
+        }
+
+        payload.set("hytaleAuth", authNode);
 
         pubsubClient.send(
                 "node-" + node.getId().toString(),
