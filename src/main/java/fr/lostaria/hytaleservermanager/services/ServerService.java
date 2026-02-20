@@ -66,7 +66,7 @@ public class ServerService {
     }
 
     @Transactional
-    public void createServer(String image) {
+    public Server createServer(String image) {
         Node node = nodeService.getLeastLoadedNode();
         if (node == null) {
             throw new IllegalStateException("No available node");
@@ -78,6 +78,9 @@ public class ServerService {
         nextServerId++;
 
         GameSessionResponse gs = hytaleSessionService.createGameSession(hytaleProfileUuid);
+        System.out.println("-----------");
+        System.out.println("sessionToken : " + gs.sessionToken());
+        System.out.println("identityToken : " + gs.identityToken());
 
         Server server = Server.builder()
                 .id(serverId)
@@ -109,6 +112,12 @@ public class ServerService {
                 "CREATE_SERVER",
                 payload
         );
+
+        return server;
+    }
+
+    public void deleteServer(Server server) {
+        // TODO
     }
 
 
