@@ -35,6 +35,13 @@ public class HytaleAuthBootstrap {
         }
     }
 
+    @Scheduled(fixedDelay = 10_000L)
+    public void ensureAuthIfMissing() {
+        if (!pollingActive && !oauth.hasValidRefreshToken()) {
+            startDeviceFlow();
+        }
+    }
+
     @Scheduled(fixedDelay = 5_000L)
     public void pollIfActive() {
         if (!pollingActive) return;

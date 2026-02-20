@@ -7,6 +7,8 @@ import fr.lostaria.hytaleservermanager.repositories.HytaleAuthTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import java.net.URI;
@@ -115,14 +117,15 @@ public class HytaleOAuthService {
         }
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String requestAccessToken() {
-        HytaleAuthToken row = tokenRepo.findById(PRIMARY_ID).orElse(null);
+        HytaleAuthToken row = tokenRepo.findPrimaryForUpdate().orElse(null);
 
         if (row == null || row.getRefreshToken() == null || row.getRefreshToken().isBlank()) {
             throw new IllegalStateException("Hytale refresh_token missing. Wait for startup auth to complete.");
         }
         if (row.getExpiresAt() == null || row.getExpiresAt().isBefore(Instant.now())) {
-            throw new IllegalStateException("Hytale refresh_token expired. Wait for startup auth to complete.");
+            throw new IllegalStateException("Hytale refresh_token expired (local). Re-auth required.");
         }
 
         try {
@@ -141,20 +144,30 @@ public class HytaleOAuthService {
             HttpResponse<String> res = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
             String body = res.body();
 
-            if (res.statusCode() / 100 == 2) {
-                OAuthTokenResponse token = objectMapper.readValue(body, OAuthTokenResponse.class);
-                if (token.accessToken() == null || token.accessToken().isBlank()) {
-                    throw new IllegalStateException("OAuth response missing access_token");
+            if (res.statusCode() / 100 != 2) {
+                OAuthTokenResponse err = tryParseOAuthError(body);
+
+                if (err != null && "invalid_grant".equals(err.error())) {
+                    tokenRepo.deleteById(PRIMARY_ID);
+                    throw new IllegalStateException("Hytale refresh_token invalid_grant (expired/revoked/already used). Re-auth required (check logs).");
                 }
-                return token.accessToken();
+
+                throw new IllegalStateException("OAuth refresh failed: status=" + res.statusCode() + " body=" + body);
             }
 
-            OAuthTokenResponse err = tryParseOAuthError(body);
-            if (err != null && "invalid_grant".equals(err.error())) {
-                throw new IllegalStateException("Hytale refresh_token invalid_grant. Restart API to regenerate link.");
+            OAuthTokenResponse token = objectMapper.readValue(body, OAuthTokenResponse.class);
+
+            if (token.accessToken() == null || token.accessToken().isBlank()) {
+                throw new IllegalStateException("OAuth response missing access_token");
             }
 
-            throw new IllegalStateException("OAuth refresh failed: status=" + res.statusCode() + " body=" + body);
+            if (token.refreshToken() != null && !token.refreshToken().isBlank()) {
+                row.setRefreshToken(token.refreshToken().trim());
+                row.setExpiresAt(Instant.now().plus(30, ChronoUnit.DAYS));
+                tokenRepo.save(row);
+            }
+
+            return token.accessToken();
 
         } catch (IllegalStateException e) {
             throw e;
