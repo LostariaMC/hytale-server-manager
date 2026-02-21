@@ -2,6 +2,7 @@ package fr.lostaria.hytaleservermanager.services;
 
 import fr.lostaria.hytaleservermanager.entities.Node;
 import fr.lostaria.hytaleservermanager.entities.Server;
+import fr.lostaria.hytaleservermanager.payload.ServerStatus;
 import fr.lostaria.hytaleservermanager.payload.hytale.GameSessionResponse;
 import fr.lostaria.hytaleservermanager.pubsub.PubsubClient;
 import fr.lostaria.hytaleservermanager.repositories.NodeRepository;
@@ -78,15 +79,13 @@ public class ServerService {
         nextServerId++;
 
         GameSessionResponse gs = hytaleSessionService.createGameSession(hytaleProfileUuid);
-        System.out.println("-----------");
-        System.out.println("sessionToken : " + gs.sessionToken());
-        System.out.println("identityToken : " + gs.identityToken());
 
         Server server = Server.builder()
                 .id(serverId)
                 .node(node)
                 .port(port)
                 .image(image)
+                .status(ServerStatus.STARTING)
                 .build();
 
         serverRepository.save(server);
@@ -117,7 +116,17 @@ public class ServerService {
     }
 
     public void deleteServer(Server server) {
-        // TODO
+        ObjectNode payload = objectMapper.createObjectNode();
+        payload.put("port", server.getPort());
+        payload.put("serverId", server.getId());
+
+        pubsubClient.send(
+                "node-" + server.getNode().getId().toString(),
+                "DELETE_SERVER",
+                payload
+        );
+
+        serverRepository.delete(server);
     }
 
 

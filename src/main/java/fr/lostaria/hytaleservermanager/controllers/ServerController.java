@@ -33,11 +33,8 @@ public class ServerController {
     public ResponseEntity createServer(
             @Valid @RequestBody CreateServerModel createServerModel
     ) {
-        Server server = serverService.createServer(
-                createServerModel.getImage()
-        );
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(serverMapper.toModel(server));
+        Server server = serverService.createServer(createServerModel.getImage());
+        return ResponseEntity.status(HttpStatus.CREATED).body(serverMapper.toModel(server));
     }
 
     @DeleteMapping("/{id}")
@@ -45,7 +42,7 @@ public class ServerController {
         return serverRepository.findById(id)
                 .map(server -> {
                     serverService.deleteServer(server);
-                    return ResponseEntity.noContent().build();
+                    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
                 })
                 .orElseGet(() ->
                         ResponseEntity.status(HttpStatus.NOT_FOUND)

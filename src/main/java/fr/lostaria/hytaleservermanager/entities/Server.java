@@ -1,5 +1,6 @@
 package fr.lostaria.hytaleservermanager.entities;
 
+import fr.lostaria.hytaleservermanager.payload.ServerStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,5 +26,8 @@ public class Server {
 
     @Column(nullable = false)
     private String image;
+
+    @Column(nullable = false)
+    private ServerStatus status;
 
 }

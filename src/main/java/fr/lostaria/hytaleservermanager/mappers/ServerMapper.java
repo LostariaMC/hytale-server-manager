@@ -13,6 +13,7 @@ public class ServerMapper {
         dto.setNodeId(server.getNode().getId());
         dto.setPort(server.getPort());
         dto.setImage(server.getImage());
+        dto.setStatus(server.getStatus());
         return dto;
     }
 

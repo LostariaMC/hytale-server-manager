@@ -1,5 +1,6 @@
 package fr.lostaria.hytaleservermanager.models;
 
+import fr.lostaria.hytaleservermanager.payload.ServerStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,5 +12,6 @@ public class ServerModel {
     private String nodeId;
     private int port;
     private String image;
+    private ServerStatus status;
 
 }
