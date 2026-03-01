@@ -16,6 +16,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -87,6 +88,7 @@ public class ServerService {
                 .port(port)
                 .image(image)
                 .status(ServerStatus.STARTING)
+                .createdAt(Instant.now())
                 .build();
 
         serverRepository.save(server);
@@ -155,5 +157,11 @@ public class ServerService {
         node.setNextPort(next);
 
         return port;
+    }
+
+    @Transactional
+    public Server updateStatus(Server server, ServerStatus newStatus) {
+        server.setStatus(newStatus);
+        return serverRepository.save(server);
     }
 }

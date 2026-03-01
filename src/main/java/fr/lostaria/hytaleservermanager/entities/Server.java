@@ -30,7 +30,6 @@ public class Server {
     @Column(nullable = false)
     private String image;
 
-    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 

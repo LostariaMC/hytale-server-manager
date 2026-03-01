@@ -3,6 +3,7 @@ package fr.lostaria.hytaleservermanager.controllers;
 import fr.lostaria.hytaleservermanager.entities.Server;
 import fr.lostaria.hytaleservermanager.mappers.ServerMapper;
 import fr.lostaria.hytaleservermanager.models.CreateServerModel;
+import fr.lostaria.hytaleservermanager.models.UpdateServerStatusModel;
 import fr.lostaria.hytaleservermanager.payload.ErrorResponse;
 import fr.lostaria.hytaleservermanager.repositories.ServerRepository;
 import fr.lostaria.hytaleservermanager.services.ServerService;
@@ -50,6 +51,23 @@ public class ServersController {
                                         HttpStatus.NOT_FOUND,
                                         "Server not found"
                                 ))
+                );
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity updateServerStatus(
+            @PathVariable String id,
+            @Valid @RequestBody UpdateServerStatusModel body
+    ) {
+        return serverRepository.findById(id)
+                .map(server -> {
+                    Server updated = serverService.updateStatus(server, body.getStatus());
+                    return (ResponseEntity) ResponseEntity.ok()
+                            .body(serverMapper.toModel(updated));
+                })
+                .orElseGet(() ->
+                        ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(new ErrorResponse(HttpStatus.NOT_FOUND, "Server not found"))
                 );
     }
 
