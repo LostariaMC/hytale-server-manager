@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/nodes")
-public class NodeController {
+public class NodesController {
 
     private final NodeRepository nodeRepository;
     private final NodeMapper nodeMapper;
     private final NodeService nodeService;
 
-    public NodeController(NodeRepository nodeRepository, NodeMapper nodeMapper, NodeService nodeService) {
+    public NodesController(NodeRepository nodeRepository, NodeMapper nodeMapper, NodeService nodeService) {
         this.nodeRepository = nodeRepository;
         this.nodeMapper = nodeMapper;
         this.nodeService = nodeService;

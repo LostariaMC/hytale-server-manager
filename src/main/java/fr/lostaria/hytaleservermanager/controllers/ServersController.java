@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/servers")
-public class ServerController {
+public class ServersController {
 
     private final ServerRepository serverRepository;
     private final ServerMapper serverMapper;
     private final ServerService serverService;
 
-    public ServerController(
+    public ServersController(
             ServerRepository serverRepository,
             ServerMapper serverMapper,
             ServerService serverService

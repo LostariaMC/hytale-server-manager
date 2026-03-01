@@ -14,6 +14,7 @@ public class ServerMapper {
         dto.setPort(server.getPort());
         dto.setImage(server.getImage());
         dto.setStatus(server.getStatus());
+        dto.setCreatedAt(server.getCreatedAt());
         return dto;
     }
 

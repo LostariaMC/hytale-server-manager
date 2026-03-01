@@ -59,6 +59,7 @@ public class ServerService {
         serverIds.add("partdieu");       // Lyon Part-Dieu
         serverIds.add("perrache");       // Lyon Perrache
         serverIds.add("flandres");       // Lille Flandres
+        serverIds.add("europe");         // Lille Europe
         serverIds.add("matabiau");       // Toulouse Matabiau
         serverIds.add("chateaucreux");   // Saint-Etienne Chateaucreux
         serverIds.add("saintcharles");   // Marseille Saint-Charles
