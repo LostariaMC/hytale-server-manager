@@ -38,6 +38,7 @@ public class PubsubClient {
             URI uri = URI.create(baseUrl + "/messages/" + consumer);
 
             ObjectNode envelope = objectMapper.createObjectNode();
+            envelope.put("consumer", consumer);
             envelope.put("type", type);
             envelope.put("producer", "server-manager");
             envelope.set("payload", payload);
