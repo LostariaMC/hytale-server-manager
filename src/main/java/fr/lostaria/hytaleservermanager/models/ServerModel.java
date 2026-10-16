@@ -12,6 +12,7 @@ public class ServerModel {
 
     private String id;
     private String nodeId;
+    private String ip;
     private int port;
     private String image;
     private ServerStatus status;

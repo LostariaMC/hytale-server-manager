@@ -11,6 +11,7 @@ public class ServerMapper {
         ServerModel dto = new ServerModel();
         dto.setId(server.getId());
         dto.setNodeId(server.getNode().getId());
+        dto.setIp(server.getNode().getIp());
         dto.setPort(server.getPort());
         dto.setImage(server.getImage());
         dto.setStatus(server.getStatus());

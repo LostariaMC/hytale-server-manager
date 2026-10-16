@@ -18,7 +18,7 @@ public class Server {
     @Id
     private String id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "node_id", nullable = false)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
