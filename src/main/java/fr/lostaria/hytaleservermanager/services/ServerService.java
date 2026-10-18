@@ -87,7 +87,7 @@ public class ServerService {
                 .node(node)
                 .port(port)
                 .image(image)
-                .status(ServerStatus.STARTING)
+                .status(ServerStatus.CREATED)
                 .createdAt(Instant.now())
                 .build();
 
