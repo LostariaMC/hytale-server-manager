@@ -10,4 +10,8 @@ import java.util.List;
 public interface ServerRepository extends JpaRepository<Server, String> {
     @Query("select s.port from Server s where s.node.id = :nodeId")
     List<Integer> findAllPortsByNodeId(@Param("nodeId") String nodeId);
+
+    long countByImage(String image);
+
+    List<Server> findAllByImage(String image);
 }

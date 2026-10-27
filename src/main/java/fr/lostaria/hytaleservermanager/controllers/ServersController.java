@@ -6,6 +6,7 @@ import fr.lostaria.hytaleservermanager.models.CreateServerModel;
 import fr.lostaria.hytaleservermanager.models.UpdateServerStatusModel;
 import fr.lostaria.hytaleservermanager.payload.ErrorResponse;
 import fr.lostaria.hytaleservermanager.repositories.ServerRepository;
+import fr.lostaria.hytaleservermanager.services.HubAutoStarter;
 import fr.lostaria.hytaleservermanager.services.ServerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,15 @@ public class ServersController {
     ) {
         Server server = serverService.createServer(createServerModel.getImage());
         return ResponseEntity.status(HttpStatus.CREATED).body(serverMapper.toModel(server));
+    }
+
+    @GetMapping("/hubs")
+    public ResponseEntity getHubs() {
+        return ResponseEntity.ok(
+                serverRepository.findAllByImage(HubAutoStarter.HUB_IMAGE).stream()
+                        .map(serverMapper::toModel)
+                        .toList()
+        );
     }
 
     @DeleteMapping("/{id}")
